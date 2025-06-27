@@ -1,0 +1,547 @@
+---
+title: "Figure1_Plots_Shannon_higlighted_20240312"
+author: "Laura Pettrich"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Prepare environment
+
+```{r}
+## Clean environment
+rm(list = ls())
+#invisible(lapply(paste0('package:', names(sessionInfo()$otherPkgs)), detach, character.only=TRUE, unload=TRUE))
+
+# Load libraries
+library(tidyverse)
+#library(dplyr)
+library(scales)
+#library(ggplot2)
+library(patchwork)
+library(cowplot)
+#library(grid)
+#library(gridExtra)
+library(zoo)
+
+# Set directory
+#setwd("/home/alle/recombination-map")
+getwd()
+
+```
+
+## Load recombination data files
+
+```{r}
+#-------------------------------------------------------------------
+# Load data
+#-------------------------------------------------------------------
+ind <- c("MF1", "MF2", "MF3", "MF4", "MG2", "MG3", "MG4", "MG5", "NMF1", "NMF2", "NMF3", "NMF4", 
+         "SI1", "SI2", "SI3", "SI4", "SS1", "SS2", "SS3", "SS4")
+chr <- c("Chr1", "Chr2", "Chr3", "Chr4")
+
+```
+
+## Add info on centromere prediction based on Shannon Diversity (H)
+
+```{r}
+#--------------------------------------------------------------------------------------
+
+# Add RepOBserver Shannon Diversity
+
+#--------------------------------------------------------------------------------------
+
+#setwd("/home/alle/sciebo/RecombinationLandscape_CRIP/01_Revison/NewResults/")
+setwd("C:/Users/laupe/Documents/sciebo/RecombinationLandscape_CRIP/01_Revison/NewResults")
+
+# Need to recreate Shannon diversity values averaged with rolling window across 100 windows (500kbp region)
+# !!!
+
+
+#------------------------------------------- 
+# Basic Plots
+#------------------------------------------- 
+#Chr1
+Shannon_div <- read.table("C:/Users/laupe/Documents/sciebo/RecombinationLandscape_CRIP/01_Revison/Sorted_final_files/Final_Supplement/Zenodo/RepeatOBserver/Criparius_H0-AT_Chr1_Shannon_div.txt")
+
+plot(Shannon_div)
+
+# Copied from GitHub RepOBserver
+genome_pos <- Shannon_div$V1
+bin_size=100
+roll_mean_Shannon <- zoo::rollapply(Shannon_div$V2, width = bin_size, FUN=mean, fill = NA, partial=(bin_size/2))
+  
+cent100 <- base::which(roll_mean_Shannon == base::min(roll_mean_Shannon, na.rm=TRUE))
+  
+grDevices::png(file="Plots/test_Chr1_roll_mean_Shannon_100.png", width = 1500, height = 500)
+  base::plot(genome_pos, roll_mean_Shannon)
+grDevices::dev.off()
+  
+
+#Chr2
+Shannon_div <- read.table("C:/Users/laupe/Documents/sciebo/RecombinationLandscape_CRIP/01_Revison/Sorted_final_files/Final_Supplement/Zenodo/RepeatOBserver/Criparius_H0-AT_Chr2_Shannon_div.txt")
+
+plot(Shannon_div)
+
+# Copied from GitHub RepOBserver
+genome_pos <- Shannon_div$V1
+bin_size=100
+roll_mean_Shannon <- zoo::rollapply(Shannon_div$V2, width = bin_size, FUN=mean, fill = NA, partial=(bin_size/2))
+
+cent100 <- base::which(roll_mean_Shannon == base::min(roll_mean_Shannon, na.rm=TRUE))
+
+grDevices::png(file="Plots/test_Chr2_roll_mean_Shannon_100.png", width = 1500, height = 500)
+base::plot(genome_pos, roll_mean_Shannon)
+grDevices::dev.off()
+
+#Chr3
+Shannon_div <- read.table("C:/Users/laupe/Documents/sciebo/RecombinationLandscape_CRIP/01_Revison/Sorted_final_files/Final_Supplement/Zenodo/RepeatOBserver/Criparius_H0-AT_Chr3_Shannon_div.txt")
+
+plot(Shannon_div)
+
+# Copied from GitHub RepOBserver
+genome_pos <- Shannon_div$V1
+bin_size=100
+roll_mean_Shannon <- zoo::rollapply(Shannon_div$V2, width = bin_size, FUN=mean, fill = NA, partial=(bin_size/2))
+
+cent100 <- base::which(roll_mean_Shannon == base::min(roll_mean_Shannon, na.rm=TRUE))
+
+grDevices::png(file="Plots/test_Chr3_roll_mean_Shannon_100.png", width = 1500, height = 500)
+base::plot(genome_pos, roll_mean_Shannon)
+grDevices::dev.off()
+
+#Chr4
+Shannon_div <- read.table("C:/Users/laupe/Documents/sciebo/RecombinationLandscape_CRIP/01_Revison/Sorted_final_files/Final_Supplement/Zenodo/RepeatOBserver/Criparius_H0-AT_Chr4_Shannon_div.txt")
+
+plot(Shannon_div)
+
+# Copied from GitHub RepOBserver
+genome_pos <- Shannon_div$V1
+bin_size=100
+roll_mean_Shannon <- zoo::rollapply(Shannon_div$V2, width = bin_size, FUN=mean, fill = NA, partial=(bin_size/2))
+
+cent100 <- base::which(roll_mean_Shannon == base::min(roll_mean_Shannon, na.rm=TRUE))
+
+grDevices::png(file="Plots/test_Chr4_roll_mean_Shannon_100.png", width = 1500, height = 500)
+base::plot(genome_pos, roll_mean_Shannon)
+grDevices::dev.off()
+
+#---------------------------------------------------------
+# all together
+
+# List of filenames
+filenames <- c(
+  'C:/Users/laupe/Documents/sciebo/RecombinationLandscape_CRIP/01_Revison/Sorted_final_files/Final_Supplement/Zenodo/RepeatOBserver/Criparius_H0-AT_Chr1_Shannon_div.txt',
+  'C:/Users/laupe/Documents/sciebo/RecombinationLandscape_CRIP/01_Revison/Sorted_final_files/Final_Supplement/Zenodo/RepeatOBserver/Criparius_H0-AT_Chr2_Shannon_div.txt',
+  'C:/Users/laupe/Documents/sciebo/RecombinationLandscape_CRIP/01_Revison/Sorted_final_files/Final_Supplement/Zenodo/RepeatOBserver/Criparius_H0-AT_Chr3_Shannon_div.txt',
+  'C:/Users/laupe/Documents/sciebo/RecombinationLandscape_CRIP/01_Revison/Sorted_final_files/Final_Supplement/Zenodo/RepeatOBserver/Criparius_H0-AT_Chr4_Shannon_div.txt'
+)
+
+# Function to read file and add a new column
+read_and_add_column <- function(filepath) {
+  # Extract the filename from the filepath
+  filename <- basename(filepath)
+  
+  # Extract chromosome info from filename
+  chromosome <- strsplit(filename, "_")[[1]][3]
+  
+  # Read the file into a dataframe
+  df <- read.table(filepath, header=FALSE, sep=" ")
+  
+  # Add a new column with the chromosome info
+  df <- df %>%
+    mutate(Chromosome = chromosome) %>%
+    rename(Genome_position = V1,
+           Shannon_div = V2)
+  
+  return(df)
+}
+
+# Read all files and combine into a single dataframe
+Shannon_div_total <- do.call(rbind, lapply(filenames, read_and_add_column))
+
+grDevices::png(file="Plots/test_Shannon_div.png", width = 1000, height = 700)
+print(
+  ggplot2::ggplot(data=Shannon_div_total, ggplot2::aes(x=Genome_position, y=Shannon_div))+
+    ggplot2::geom_point(ggplot2::aes(x=Genome_position, y=Shannon_div))+
+    ggplot2::facet_wrap(~Chromosome, scales = "free")+
+    ggplot2::theme_classic()
+)
+grDevices::dev.off()
+
+# Roll mean for  Shannon div data
+Shannon_div_total$Shannon_roll_mean <- zoo::rollapply(Shannon_div_total$Shannon_div, width = 100, FUN=mean, fill = NA, partial=(100/2))
+
+grDevices::png(file="Plots/test_rolling_mean_500Kbp_Shannon_div.png", width = 1000, height = 700)
+print(
+  ggplot2::ggplot(data=Shannon_div_total, ggplot2::aes(x=Genome_position, y=Shannon_roll_mean))+
+    ggplot2::geom_point(ggplot2::aes(x=Genome_position, y=Shannon_roll_mean))+
+    ggplot2::facet_wrap(~Chromosome, scales = "free")+
+    ggplot2::theme_classic()
+)
+grDevices::dev.off()
+
+
+#------------------------------------------- 
+# Improved Plots to fit to others
+#------------------------------------------- 
+
+# Read in Shannon diversity files
+# List of filenames
+filenames <- c(
+  'C:/Users/laupe/Documents/sciebo/RecombinationLandscape_CRIP/01_Revison/Sorted_final_files/Final_Supplement/Zenodo/RepeatOBserver/Criparius_H0-AT_Chr1_Shannon_div.txt',
+  'C:/Users/laupe/Documents/sciebo/RecombinationLandscape_CRIP/01_Revison/Sorted_final_files/Final_Supplement/Zenodo/RepeatOBserver/Criparius_H0-AT_Chr2_Shannon_div.txt',
+  'C:/Users/laupe/Documents/sciebo/RecombinationLandscape_CRIP/01_Revison/Sorted_final_files/Final_Supplement/Zenodo/RepeatOBserver/Criparius_H0-AT_Chr3_Shannon_div.txt',
+  'C:/Users/laupe/Documents/sciebo/RecombinationLandscape_CRIP/01_Revison/Sorted_final_files/Final_Supplement/Zenodo/RepeatOBserver/Criparius_H0-AT_Chr4_Shannon_div.txt'
+)
+
+# Function to read file and add a new column
+read_and_add_column <- function(filepath) {
+  # Extract the filename from the filepath
+  filename <- basename(filepath)
+  
+  # Extract chromosome info from filename
+  chromosome <- strsplit(filename, "_")[[1]][3]
+  
+  # Read the file into a dataframe
+  df <- read.table(filepath, header=FALSE, sep=" ")
+  
+  # Add a new column with the chromosome info
+  df <- df %>%
+    mutate(Chromosome = chromosome) %>%
+    rename(Genome_position = V1,
+           Shannon_div = V2)
+  
+  return(df)
+}
+
+# Read all files and combine into a single dataframe
+Shannon_div_total <- do.call(rbind, lapply(filenames, read_and_add_column))
+
+# Plot it
+Shannon_div_total %>%
+ggplot(aes(x=Genome_position, y=Shannon_div)) +
+  geom_point() +
+  facet_wrap(~Chromosome, scales = "free")+
+  theme_classic()
+
+
+# Roll mean for  Shannon div data
+Shannon_div_total$Shannon_roll_mean <- zoo::rollapply(Shannon_div_total$Shannon_div, width = 100, FUN=mean, fill = NA, partial=(100/2))
+
+
+# Plot it
+Shannon_div_total %>%
+  ggplot(aes(x=Genome_position, y=Shannon_roll_mean)) +
+  geom_point() +
+  facet_wrap(~Chromosome, scales = "free")+
+  theme_classic()
+
+
+# Change layout
+mytheme <- theme(axis.text.x = element_text(size = 11, color = "black"),
+                 axis.text.y = element_text(size = 11, color = "black"),
+                 axis.title.y = element_text(size = 14,face = "bold", color = "black"),
+                 axis.title.x = element_text(size = 14,face = "bold", color = "black"),
+                 title = element_text(size = 12, color = "black"),
+                 panel.background = element_rect(fill="white"),
+                 panel.grid.major = element_line("lightgrey"),
+                 panel.grid.minor = element_line("white"),
+                 panel.border = element_rect("black", fill = NA),
+                 plot.background = element_rect(fill="white"),
+                 legend.background = element_rect(fill="white"),
+                 legend.position="bottom")
+
+# Plot it
+Shannon_div_total %>%
+  ggplot(aes(x=Genome_position, y=Shannon_roll_mean)) +
+  geom_point() +
+  facet_wrap(~Chromosome, scales = "free") +
+  scale_x_continuous(labels = comma, expand = c(0.125,0.125)) +
+  labs(x = "Position (bp)", y = "Shannon diversity (Rolling mean in 500 kbp windows)") +
+  mytheme
+
+
+# Plot by chromosome
+# Create individual plots for each chromosome
+chr_no <- unique(Shannon_div_total$Chromosome)
+Shannon_div_total <- Shannon_div_total %>%
+  mutate(Genome_position = Genome_position/1e6)
+
+for (chr in chr_no) {
+  # Subset the data for the current chromosome
+  chr_data <- filter(Shannon_div_total, Chromosome == chr)
+  # Create the plot
+  p <- ggplot(chr_data, aes(x=Genome_position, y=Shannon_roll_mean)) +
+    geom_point() +
+    scale_x_continuous(labels = comma, expand = c(0.125,0.125)) +
+    labs(x = "Position (Mb)", y = "Shannon diversity \n(Rolling mean in 5 kbp windows)"#, 
+         #title = paste(chr)
+         ) +
+    mytheme
+  
+  # Assign the plot to a variable with a dynamic name
+  assign(paste0("ShDi_", chr), p)
+  
+  print(p)
+}
+ 
+
+# Adjust limits to other plots
+minH <- min(Shannon_div_total$Shannon_roll_mean)
+maxH <- max(Shannon_div_total$Shannon_roll_mean)
+
+
+
+ShDi_Chr1 + ShDi_Chr2 + ShDi_Chr3 + ShDi_Chr4
+
+```
+
+## Mark centromere range
+
+```{r}
+# Centromere prediction of RepOBserver based on Shannon Div
+cenpred <- read.table("C:/Users/laupe/Documents/sciebo/RecombinationLandscape_CRIP/01_Revison/Sorted_final_files/Final_Supplement/Zenodo/RepeatOBserver/Criparius_H0-AT_Centromere_summary_Shannon_500.txt")
+cenpred <- cenpred %>%
+  rename(
+    Analysis = V1,
+    Centromere_Prediciton = V2,
+    Chr_Length = V3,
+    Species = V4,
+    Chromosome = V5) %>%
+  mutate(
+    Centromere_Prediciton = Centromere_Prediciton/1e6
+  )
+  
+cenpred
+
+
+# Centromere prediction of RepOBserver based on Histogram
+cenhist <- read.table("C:/Users/laupe/Documents/sciebo/RecombinationLandscape_CRIP/01_Revison/Sorted_final_files/Final_Supplement/Zenodo/RepeatOBserver/Criparius_H0-AT_Centromere_histograms_summary.txt")
+cenhist <- cenhist %>%
+  rename(
+    Species = V1,
+    Chromosome = V2,
+    Centromere_Prediciton_hist = V3,
+    Chr_Length = V4) %>%
+  mutate(
+    Centromere_Prediciton_hist = Centromere_Prediciton_hist/1e6
+  )
+
+cenhist
+
+# Read in centromere ranges
+cenrange <- read.csv("C:/Users/laupe/Documents/sciebo/RecombinationLandscape_CRIP/01_Revison/Sorted_final_files/Final_Supplement/Zenodo/input-files_figures/CentromereRange.csv", sep = ",", header = TRUE)
+head(cenrange)
+
+cenrange <- cenrange %>%
+  mutate(
+    censtart = censtart/1e6,
+    cenend = cenend/1e6
+  )
+  
+
+# Add it to the plots
+
+
+# Get the current dataframe for the chromosome from the list
+
+  current_cr1 <- filter(cenrange, Chromosome == "Chr1")  # Filter cenrange for the current chromosome
+  chr_data1 <- filter(Shannon_div_total, Chromosome == "Chr1")  # Subset data for the current chromosome
+
+  # Create the plot
+ShDi_Chr1 <- ggplot(chr_data1, aes(x = Genome_position, y = Shannon_roll_mean)) +
+    geom_rect(aes(xmin = current_cr1$censtart, xmax = current_cr1$cenend, ymin = -Inf, ymax = Inf),
+              fill = "lightgrey", alpha = 0.02) +  # Keep original alpha
+    geom_vline(aes(xintercept = current_cr1$censtart), 
+               color = "grey", linetype = "dashed", size = 0.5) +
+    geom_vline(aes(xintercept = current_cr1$cenend), 
+               color = "grey", linetype = "dashed", size = 0.5) +
+    geom_line(size = 0.5) +
+    scale_x_continuous(limits = c(0, (max(Shannon_div_total$Genome_position))), 
+                       labels = comma, expand = c(0.125, 0.125)) +
+    scale_y_continuous(limits = c(minH, maxH), labels = comma) +
+    labs(x = "Position (Mb)", y = "H") +
+    mytheme
+  
+
+# Get the current dataframe for the chromosome from the list
+
+  current_cr2 <- filter(cenrange, Chromosome == "Chr2")  # Filter cenrange for the current chromosome
+  chr_data2 <- filter(Shannon_div_total, Chromosome == "Chr2")  # Subset data for the current chromosome
+
+  # Create the plot
+ShDi_Chr2 <- ggplot(chr_data2, aes(x = Genome_position, y = Shannon_roll_mean)) +
+    geom_rect(aes(xmin = current_cr2$censtart, xmax = current_cr2$cenend, ymin = -Inf, ymax = Inf),
+              fill = "lightgrey", alpha = 0.02) +  # Keep original alpha
+    geom_vline(aes(xintercept = current_cr2$censtart), 
+               color = "grey", linetype = "dashed", size = 0.5) +
+    geom_vline(aes(xintercept = current_cr2$cenend), 
+               color = "grey", linetype = "dashed", size = 0.5) +
+    geom_line(size = 0.5) +
+    scale_x_continuous(limits = c(0, (max(Shannon_div_total$Genome_position))), 
+                       labels = comma, expand = c(0.125, 0.125)) +
+    scale_y_continuous(limits = c(minH, maxH), labels = comma) +
+    scale_y_continuous(limits = c(minH, maxH), labels = comma) +
+    labs(x = "Position (Mb)", y = "H") +
+    mytheme
+
+# Get the current dataframe for the chromosome from the list
+
+  current_cr3 <- filter(cenrange, Chromosome == "Chr3")  # Filter cenrange for the current chromosome
+  chr_data3 <- filter(Shannon_div_total, Chromosome == "Chr3")  # Subset data for the current chromosome
+
+  # Create the plot
+ShDi_Chr3 <- ggplot(chr_data3, aes(x = Genome_position, y = Shannon_roll_mean)) +
+    geom_rect(aes(xmin = current_cr3$censtart, xmax = current_cr3$cenend, ymin = -Inf, ymax = Inf),
+              fill = "lightgrey", alpha = 0.02) +  # Keep original alpha
+    geom_vline(aes(xintercept = current_cr3$censtart), 
+               color = "grey", linetype = "dashed", size = 0.5) +
+    geom_vline(aes(xintercept = current_cr3$cenend), 
+               color = "grey", linetype = "dashed", size = 0.5) +
+    geom_line(size = 0.5) +
+    scale_x_continuous(limits = c(0, (max(Shannon_div_total$Genome_position))), 
+                       labels = comma, expand = c(0.125, 0.125)) +
+    scale_y_continuous(limits = c(minH, maxH), labels = comma) +
+    labs(x = "Position (Mb)", y = "H") +
+    mytheme
+
+# Get the current dataframe for the chromosome from the list
+
+  current_cr4 <- filter(cenrange, Chromosome == "Chr4")  # Filter cenrange for the current chromosome
+  chr_data4 <- filter(Shannon_div_total, Chromosome == "Chr4")  # Subset data for the current chromosome
+
+  # Create the plot
+ShDi_Chr4 <- ggplot(chr_data4, aes(x = Genome_position, y = Shannon_roll_mean)) +
+    geom_rect(aes(xmin = current_cr4$censtart, xmax = current_cr4$cenend, ymin = -Inf, ymax = Inf),
+              fill = "lightgrey", alpha = 0.02) +  # Keep original alpha
+    geom_vline(aes(xintercept = current_cr4$censtart), 
+               color = "grey", linetype = "dashed", size = 0.5) +
+    geom_vline(aes(xintercept = current_cr4$cenend), 
+               color = "grey", linetype = "dashed", size = 0.5) +
+    geom_line(size = 0.5) +
+    scale_x_continuous(limits = c(0, (max(Shannon_div_total$Genome_position))), 
+                       labels = comma, expand = c(0.125, 0.125)) +
+    scale_y_continuous(limits = c(minH, maxH), labels = comma) +
+    labs(x = "Position (Mb)", y = "H") +
+    mytheme
+
+ShDi_Chr1 + ShDi_Chr2 + ShDi_Chr3 + ShDi_Chr4
+```
+
+# cumulative axis (with ChatGPT)
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(scales)
+
+### PREPARE DATA ###
+# (Assumes Shannon_div_total and cenrange are already loaded)
+
+# Convert columns to numeric (in Mb) if needed
+Shannon_div_total <- Shannon_div_total %>%
+  mutate(Genome_position = as.numeric(as.character(Genome_position)))
+cenrange <- cenrange %>%
+  mutate(censtart = as.numeric(as.character(censtart)),
+         cenend   = as.numeric(as.character(cenend)))
+
+# Define chromosome order
+chr_order <- c("Chr1", "Chr2", "Chr3", "Chr4")
+
+# Compute each chromosome's length (using the maximum position as a proxy)
+chr_lengths <- sapply(chr_order, function(chr) {
+  max(Shannon_div_total$Genome_position[Shannon_div_total$Chromosome == chr], na.rm = TRUE)
+})
+
+# Calculate cumulative boundaries: these mark the cumulative end positions for each chromosome
+chr_boundaries <- c(0, cumsum(chr_lengths))
+# Offsets: 0 for Chr1, then cumulative sums for preceding chromosomes
+offsets <- chr_boundaries[1:length(chr_lengths)]
+
+# Create a lookup table with offsets and lengths
+offset_df <- data.frame(Chromosome = chr_order,
+                        offset = offsets,
+                        chr_length = chr_lengths)
+
+# Compute cumulative positions by adding the offset for each observation
+Shannon_div_total <- Shannon_div_total %>% 
+  left_join(offset_df, by = "Chromosome") %>%
+  mutate(cum_position = Genome_position + offset)
+
+# Adjust centromere ranges to cumulative coordinates (if needed)
+cenrange_cum <- cenrange %>%
+  left_join(offset_df, by = "Chromosome") %>%
+  mutate(cum_censtart = censtart + offset,
+         cum_cenend   = cenend + offset)
+
+# Compute midpoints for each chromosome (for the top axis)
+chr_midpoints <- offsets + chr_lengths / 2
+# Create labels that include the chromosome name and its size (rounded to one decimal)
+axis_labels <- data.frame(Chromosome = chr_order, mid = chr_midpoints,
+                          label = paste0(chr_order, " (", sprintf("%.1f", chr_lengths), " Mb)"))
+
+### SET UP THE X-AXIS BREAKS ###
+# define theme
+mytheme <- theme(
+  axis.text.x = element_text(size = 11, color = "black"),
+  axis.text.y = element_text(size = 11, color = "black"),
+  axis.text.x.top = element_text(size = 11, color = "black"),  # Use this for the top axis
+  axis.title.y = element_text(size = 14, face = "bold", color = "black"),
+  axis.title.x = element_text(size = 14, face = "bold", color = "black"),
+  title = element_text(size = 12, color = "black"),
+  panel.background = element_rect(fill = "white"),
+  panel.grid.major = element_line("lightgrey"),
+  panel.grid.minor = element_line("white"),
+  panel.border = element_rect("black", fill = NA),
+  plot.background = element_rect(fill = "white"),
+  legend.background = element_rect(fill = "white"),
+  legend.position = "bottom"
+)
+
+# Generate a set of numeric breaks along the cumulative x-axis
+bottom_breaks <- pretty(Shannon_div_total$cum_position, n = 10)
+# Ensure the final cumulative coordinate is included
+if (max(bottom_breaks) < max(Shannon_div_total$cum_position)) {
+  bottom_breaks <- c(bottom_breaks, max(Shannon_div_total$cum_position))
+}
+bottom_breaks <- sort(unique(bottom_breaks))
+
+### CREATE THE PLOT ###
+p <- ggplot(Shannon_div_total, aes(x = cum_position, y = Shannon_roll_mean)) +
+  geom_line(size = 0.5) +
+  # Optionally add shaded centromere regions
+  geom_rect(data = cenrange_cum, 
+            aes(xmin = cum_censtart, xmax = cum_cenend, ymin = -Inf, ymax = Inf),
+            fill = "grey40", alpha = 0.2, inherit.aes = FALSE) +
+  # Draw vertical dashed lines at chromosome boundaries (except at 0)
+  geom_vline(xintercept = chr_boundaries[-1], linetype = "dashed", color = "grey10", size = 1) +
+  # Primary (bottom) x-axis: cumulative positions with numeric labels
+  scale_x_continuous(name = "Cumulative Position (Mb)",
+                     breaks = bottom_breaks,
+                     labels = bottom_breaks,
+                     expand = expansion(mult = c(0.05, 0.05)),
+                     # Secondary (top) axis: chromosome names and sizes centered at midpoints
+                     sec.axis = sec_axis(~ ., 
+                                         breaks = axis_labels$mid, 
+                                         labels = axis_labels$label,
+                                         name = NULL)) +
+  labs(y = "Shannon dversity (H)") +
+  mytheme +
+  theme(axis.text.x = element_text(size = 14),
+        axis.title.x = element_text(size = 16),
+        axis.title.y = element_text(size = 16),
+        axis.text.y = element_text(size = 14),
+        # Change here: use axis.text.x.top instead of axis.text.top
+        axis.text.x.top = element_text(size = 12, face = "bold"))
+
+# Display the plot
+print(p)
+
+save_plot("C:/Users/laupe/Documents/sciebo/RecombinationLandscape_CRIP/02_Revision_2/G3_GenomeReport/Plots/rolling_mean_Shannon_repeatlength_500kbwnd_20250614.png", p, base_asp = 2.5, dpi = 500, bg = "white")
+save_plot("C:/Users/laupe/Documents/sciebo/RecombinationLandscape_CRIP/02_Revision_2/G3_GenomeReport/Plots/rolling_mean_Shannon_repeatlength_500kbwnd_20250614.svg", p, base_asp = 2.5, dpi = 500, bg = "white")
+
+```
